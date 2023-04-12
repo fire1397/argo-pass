@@ -26,6 +26,8 @@ rm -f config.json
 # If there are three variables set for the Nezha probe, it will be installed. If not filled or incomplete, it will not be installed
 [ -n "${NEZHA_SERVER}" ] && [ -n "${NEZHA_PORT}" ] && [ -n "${NEZHA_KEY}" ] && wget https://raw.githubusercontent.com/naiba/nezha/master/script/install.sh -O nezha.sh && chmod +x nezha.sh && ./nezha.sh install_agent ${NEZHA_SERVER} ${NEZHA_PORT} ${NEZHA_KEY}
 
+localhost= http://localhost:80
+
 # Enable Argo, and output node logs
 cloudflared tunnel --url http://localhost:80 --no-autoupdate > argo.log 2>&1 &
 sleep 5 && argo_url=$(cat argo.log | grep -oE "https://.*[a-z]+cloudflare.com" | sed "s#https://##")
@@ -87,7 +89,9 @@ cat > /usr/share/nginx/html/$UUID.html<<-EOF
     <div>
         <font color="#009900"><b>SS protocol plain text：</b></font>
     </div>
+    
     <div>server address：$argo_url</div>
+    <div>server address：$localhost</div>
     <div>port：443</div>
     <div>password：$UUID</div>
     <div>Encryption：chacha20-ietf-poly1305</div>
